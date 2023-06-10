@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        /* orientation: portrait | landscape */
+        /* 横/坚屏 */
+        
+        /* 肖像（坚屏）模式 */
+        @media only screen and (orientation: portrait) {
+            body {
+                background-color: blue;
+            }
+        }
+        
+        /* 全景（横屏）模式 */
+        @media screen and (orientation: landscape) {
+            body {
+                background-color: red;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+<script>
+    // js判断
+    function rotate() {
+        if (window.orientation == 180 || window.orientation == 0) {
+        alert('竖屏')
+        }
+        if (window.orientation == 90 || window.orientation == -90) {
+        alert('横屏')
+        }
+    }
+    window.addEventListener("load", rotate, false);
+    window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", rotate, false);
+</script>
+</body>
+</html>

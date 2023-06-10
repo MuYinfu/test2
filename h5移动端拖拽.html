@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width = device-width, height = device-height, initial-scale = 1, minimum-scale = 1, maximum-scale = 1, user-scalable =no,"/>
+    <title></title>
+    <style>
+        #div{
+            width: 100px;
+            height: 100px;
+            background: red;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+
+<div id="div"></div>
+
+<script>
+    function goPAGE(){
+        if((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+            getElementMove('div');
+        }
+        else {
+           alert('游戏只能在手机上玩哦');
+        }
+    }
+    goPAGE();        // 调用function
+
+    function getElementMove(element) {
+        let ele = document.getElementById(element);
+        ele.addEventListener('touchstart', evt => {
+            evt.preventDefault();
+            console.log(evt, '手指按在屏幕上了')
+        },false)
+        ele.addEventListener('touchmove', evt => {
+            evt.preventDefault();
+            if(evt.targetTouches.length == 1){
+                let touch = evt.targetTouches[0];
+                ele.style.left = touch.pageX - ele.offsetWidth / 2 + 'px';
+                ele.style.top = touch.pageY - ele.offsetHeight / 2 + 'px';
+            }
+        },false)
+        ele.addEventListener('touchend', evt => {
+            evt.preventDefault();
+            console.log(evt, '手指离开屏幕了')
+        })
+    }
+</script>
+</body>
+</html>

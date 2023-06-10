@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HTML5获取麦克风音频,输出到扬声器</title>
+	<meta charset="UTF-8">
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <script type="text/javascript">
+		var audioCtx;       //声明
+		try
+		{       //异常捕获获取音频
+			audioCtx=new (window.AudioContext || window.webkitAudioContext)();
+		}
+		catch(e)
+		{
+			console.log("您的浏览器不支持此Api！");
+		}
+    	navigator.getUserMedia=(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);       //获取浏览器音频
+		if(navigator.getUserMedia) {    //当浏览器音频存在时
+			navigator.getUserMedia({
+      			audio:true
+      		},
+      		function(stream){
+                //   console.log(stream)
+      			// var source=audioCtx.createMediaStreamSource(stream);
+                //   console.log(source)
+          		// var biquadFilter=audioCtx.createBiquadFilter();
+                //   console.log(biquadFilter)
+          		// biquadFilter.type="lowshelf";
+          		// biquadFilter.frequency.value=1000;
+          		// biquadFilter.gain.value=25;
+          		// source.connect(biquadFilter);
+          		// biquadFilter.connect(audioCtx.destination);
+                 localStorage.setItem=stream
+         	},
+      		function(err){
+      			console.log("错误: "+err);
+      		});
+      	}else {
+      		console.log("浏览器尚不支持getUserMedia属性，请下载最新谷歌浏览器!");
+      	}
+          console.log(navigator)
+    </script>
+  </head>
+  <body>
+    This is my HTML page. <br>
+  </body>
+</html>

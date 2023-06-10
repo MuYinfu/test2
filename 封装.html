@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script
+  src="http://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+    <script>
+        var userID = "";
+        function getRandomNum() {
+    return  Math.ceil(Math.random() * 10000).toString();
+}
+        var apiURL = "https://testapi.dayutang.cn/actionService/gateway"; //生产机
+    //把对象转换为字符串拼接
+function createVarsStrByObj(obj) {
+	var str = "";
+	for(var key in obj) {
+		var encodeKeyValue = encodeURIComponent(obj[key]);
+		str += key + "=" + encodeKeyValue + "&";
+	}
+	str = str.slice(0, str.length - 1);
+	return str;
+}
+    //创建请求的url
+        function createURLStr(serviceName, methodName, otherParam) {
+            var data = {};
+            data.sn = serviceName;
+            data.mn = methodName;
+            // data.token = token;
+            data.uncache = 123*Math.random();
+            if(otherParam != null) {
+                for(var key in otherParam) {
+                    data[key] = otherParam[key];
+                }
+            }
+            //MD5验证机制///////////////////
+            // var paramArr = [];
+            // for(var key in data) {
+            //     if(key != "info") {
+            //         paramArr.push({
+            //             key: key,
+            //             value: data[key]
+            //         });
+            //     }
+            // }
+            // paramArr.sort(function(a, b) {
+            //     return a.key > b.key ? 1 : -1;
+            // });
+            // var md5 = "";
+            // for(var i = 0; i < paramArr.length; i++) {
+            //     md5 += paramArr[i].value;
+            // }
+            // // md5 += KEY;
+            // md5 = $.md5(md5);
+            // data.sign = md5;
+            ///////////////////////////////
+            var str = createVarsStrByObj(data);
+            var urlStr = apiURL + "?" + str;
+            return urlStr;
+        }
+
+
+        //发送get请求-基于jquery
+        function request(serviceName, methodName, otherParam, callback) {
+            var urlStr = createURLStr(serviceName, methodName, otherParam);
+            $.get(urlStr, function(result) {
+                var data = JSON.parse(result);
+                if(callback != null) {
+                    callback(data);
+                }
+            });
+        }
+
+
+        var shareInfo = [];
+        // 获取分享信息
+        function getShareInfo(sharePositionCode, shareTypeCode, successFun) {
+            var param = {};
+            param.sharePositionCode = sharePositionCode;
+            param.shareTypeCode = shareTypeCode;
+            request("Share","getShareInfo",param, function (data) {
+                if (data.code == 0) {
+                    shareInfo = data.shareInfo;
+                    successFun && successFun();
+                }
+            })
+        }
+        var DBOldUserHome1 = "DBOldUserHome";//梦想盒子-老生首页
+        var DBOldUserHome2 = "DBNewUserHome";//梦想盒子-新生首页
+        getShareInfo(DBOldUserHome1, 'shareTimeline', function () {
+        var linkURL = '', imgURL = '';
+        if (shareInfo.linkURL) {
+            var strHtml = shareInfo.linkURL.replace(".html",getRandomNum()+".html");
+            linkURL = strHtml + '?fromUserId=' + userID + '&shareId=' + shareInfo.shareId + '&sharePositionCode=' + DBOldUserHome1 + '&shareTypeCode=shareTimeline';
+        } else {
+            linkURL = 'https://test.dayutang.cn/activity/superBaby/index'+getRandomNum()+'.html' + '?fromUserId=' + userID + '&shareId=' + shareInfo.shareId + '&sharePositionCode=' + DBOldUserHome1 + '&shareTypeCode=shareTimeline';
+        }
+
+        if (shareInfo.imgURL) {
+            imgURL = shareInfo.imgURL;
+        } else {
+            imgURL = 'https://test.dayutang.cn/activity/mayActivity/img/sharei.jpg'
+        }
+        weiXinTools.showTimeLineMenu(shareInfo.title, linkURL, imgURL, function () {
+            _sa.track('sharePage', {
+                productModule:"梦想盒子",
+                pageName:"新生首页",
+                contentName:"活动首页",
+                shareType:"分享到朋友圈"
+            });
+            sendMissionBehaviourFun();
+            addShareRecord(shareInfo.shareId, DBOldUserHome1, 'shareTimeline');
+        });
+    });
+    </script>
+</body>
+</html>

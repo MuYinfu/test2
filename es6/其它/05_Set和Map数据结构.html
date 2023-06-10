@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>05_Set和Map数据结构</title>
+</head>
+<body>
+<!--
+1. Set容器 : 无序不可重复的多个value的集合体
+  * Set()
+  * Set(array)
+  * add(value)
+  * delete(value)
+  * has(value)
+  * clear()
+  * size
+2. Map容器 : 无序的 key不重复的多个key-value的集合体
+  * Map()
+  * Map(array)
+  * set(key, value)//添加
+  * get(key)
+  * delete(key)
+  * has(key)
+  * clear()
+  * size
+-->
+
+<script type="text/javascript">
+let num=new Set([1,2,3,4,5,6,2,12,3,4]) //去除重复的值
+num.add(15) //追加不同的值
+num.delete(2) //删除set数组中的值
+num.has(1)  //查询数组中是否有该参数，有则true 无责false
+num.clear() //清除set数组中的所有数据
+num.size  //  等同于普通数组的 array.length
+
+  console.log(num)
+
+  let sum=new Map([[1,2],[3,4],[1,2]])    //数组嵌套，每个内层数组有两个值，第一个值为key 第二个为value
+sum.set(4,5)  //追加不同的值
+console.log(sum)
+
+console.log(sum.get(5,6))
+sum.delete(4,5) //删除不同的值
+  console.log(sum)
+console.log(sum.has(1,2))  //删除不同的值
+
+  sum.clear()   //清空map数组中所有的数据
+
+  sum.size    //等同意 数组的array.length
+</script>
+</body>
+
+</html>

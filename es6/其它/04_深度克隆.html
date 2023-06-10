@@ -1,0 +1,94 @@
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>对象的深度克隆</title>
+</head>
+<body>
+
+
+<!--
+  1、数据类型：
+    * 数据分为基本的数据类型(String, Number, boolean, Null, Undefined)和对象数据类型
+    - 基本数据类型：
+      特点： 存储的是该对象的实际数据
+    - 对象数据类型：
+      特点： 存储的是该对象在栈中引用，真实的数据存放在堆内存里
+  2、复制数据
+    - 基本数据类型存放的就是实际的数据，可直接复制
+      let number2 = 2;
+      let number1 = number2;
+    - 克隆数据：对象/数组
+      1、区别： 浅拷贝/深度拷贝
+         判断： 拷贝是否产生了新的数据还是拷贝的是数据的引用
+         知识点：对象数据存放的是对象在栈内存的引用，直接复制的是对象的引用
+         let obj = {username: 'kobe'}
+         let obj1 = obj; // obj1 复制了obj在栈内存的引用
+      2、常用的拷贝技术
+        1). arr.concat(): 数组浅拷贝
+        2). arr.slice(): 数组浅拷贝--截取新数组
+        3). JSON.parse(JSON.stringify(arr/obj)): 数组或对象深拷贝, 但不能处理函数数据
+        4). 浅拷贝包含函数数据的对象/数组
+        5). 深拷贝包含函数数据的对象/数组
+-->
+<script type="text/javascript">
+  let obj={name:'admin'}
+  let obj2=Object.assign(obj)
+  obj2.name='index'
+  console.log(obj,obj2)
+
+  let obj3=[1,2,3,{name:'admin'}]
+  let obj4=obj3.concat()
+  obj4[1]=1
+  console.log(obj3,obj4)
+
+  let obj5=JSON.parse(JSON.stringify(obj3))
+  obj5[1]='a'
+  console.log(obj3,obj5)
+
+
+  function getType(mubiao) {
+      let result = Object.prototype.toString.call(mubiao).slice(8, -1);
+      if(result === 'Null'){
+          return 'Null';
+      }else if(result === 'Undefined'){
+          return 'Undefined';
+      }else {
+          return result;//返回数据类型
+      }
+  }
+
+  //遍历数组i为下表，遍历对象i为对象的属性名
+
+
+  function clone(obj) {
+      let result,targetType=getType(obj)
+      //判断targetType的数据类型
+      if (targetType=="Array") {
+          result=[]
+      }else if(targetType=="Object"){
+          result={}
+      }else {
+          return obj    //普通类型返回原数据
+      }
+
+      for(let key in obj){    //变数对象或数组  对象 key是属性名， 数组 key是索引
+          let value = obj[key];     //数组 let为所对应的值  对象则是属性的值
+          if(getType(value) === "Object" || 'Array'){   //继续判断值的数据类型
+              result[key] = clone(value);   //当值的数据类型为引用数据类型时，使用递归进行深层次判断
+          }else {
+              result[key] = obj[key];   //直到数组或对象中没有引用数据类型  将数据储存到新建的变量中
+          }
+      }
+      return result;
+  }
+
+
+  let obj6 = {username: 'kobe',age: 39, sex: {option1: '男', option2: '女'}};
+  let obj7 = clone(obj6);
+  console.log(obj7);
+  obj7.sex.option1 = '不男不女'; // 修改复制后的对象不会影响原对象
+  console.log(obj7, obj6);
+</script> T
+</body>
+</html>
